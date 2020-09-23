@@ -2,8 +2,10 @@ import os
 
 
 class DiscordBot:
-    token = os.environ["DISCORD_BOT_MORRIGAN_TOKEN"]
+    token = os.environ["TOKEN"]
     cogs = [
         "cogs.admin",
-        "cogs.meta"
+        "cogs.custom",
+        "cogs.meta",
+        "cogs.stream"
     ]
