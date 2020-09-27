@@ -104,8 +104,8 @@ class Stream(commands.Cog):
         async def close_stream(listener, stream):
             try:
                 if stream.channel.overwrites_for(listener).deafen_members:
-                    await delete_stream_information(member)
                     await stream.channel.delete()
+                    await delete_stream_information(member)
             except AttributeError:
                 pass
 
