@@ -49,7 +49,7 @@ class TwitterCog(commands.Cog):
         async def check_tweet_already_send(optimal_channel, tweet_data):
             async for message in optimal_channel.history(limit=5):
                 try:
-                    if tweet_data.full_text == message.embeds[0].description:
+                    if message.embeds[0].description in tweet_data.full_text:
                         return False
                     return True
                 except AttributeError:
