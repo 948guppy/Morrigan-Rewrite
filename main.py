@@ -6,7 +6,7 @@ import discord
 from discord.ext import commands
 from config import DiscordBot
 
-intent = discord.Intents.default()
+intent = discord.Intents.all()
 
 
 class Morrigan(commands.Bot):
