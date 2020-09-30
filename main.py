@@ -2,13 +2,16 @@
 # -*- coding: utf-8 -*-
 
 import traceback
+import discord
 from discord.ext import commands
 from config import DiscordBot
+
+intent = discord.Intents.default()
 
 
 class Morrigan(commands.Bot):
     def __init__(self, **kwargs):
-        super().__init__(command_prefix=commands.when_mentioned_or('m/'), **kwargs, pm_help=None,
+        super().__init__(command_prefix=commands.when_mentioned_or('m/'), intents=intent, **kwargs, pm_help=None,
                          help_attrs=dict(hidden=True))
         for cog in DiscordBot.cogs:
             try:
