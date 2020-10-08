@@ -90,7 +90,7 @@ class Thread(commands.Cog):
                 await send_complete_message(ctx, channel)
                 await send_description(channel, description.content)
         await asyncio.sleep(5)
-        await ctx.delete()
+        await ctx.message.delete()
         await ctx.channel.delete_messages(delete)
 
 
