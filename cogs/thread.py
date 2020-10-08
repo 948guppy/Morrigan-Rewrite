@@ -63,7 +63,7 @@ class Thread(commands.Cog):
                 """
             )
             e.colour = 0x00ff7f
-            thread = await message.send(embed=e)
+            thread = await message.send(embed=e, delete_after=360)
             return thread
 
         def check(m):
@@ -89,6 +89,8 @@ class Thread(commands.Cog):
                 channel = await category.create_text_channel(name=name.content, topic=description.content)
                 await send_complete_message(ctx, channel)
                 await send_description(channel, description.content)
+        await asyncio.sleep(5)
+        await ctx.delete()
         await ctx.channel.delete_messages(delete)
 
 
