@@ -8,6 +8,7 @@ class DiscordBot:
         "cogs.custom",
         "cogs.meta",
         "cogs.stream",
+        "cogs.thread",
         "cogs.twitter"
     ]
 
