@@ -89,6 +89,7 @@ class Thread(commands.Cog):
                 channel = await category.create_text_channel(name=name.content, topic=description.content)
                 delete.append(await send_complete_message(ctx, channel))
                 await send_description(channel, description.content)
+        await asyncio.sleep(5)
         await ctx.delete()
         await ctx.channel.delete_messages(delete)
 
