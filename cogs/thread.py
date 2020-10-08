@@ -87,8 +87,9 @@ class Thread(commands.Cog):
                 delete.append(await ctx.send('タイムアウトしました'))
             else:
                 channel = await category.create_text_channel(name=name.content, topic=description.content)
-                await send_complete_message(ctx, channel)
+                delete.append(await send_complete_message(ctx, channel))
                 await send_description(channel, description.content)
+        await ctx.delete()
         await ctx.channel.delete_messages(delete)
 
 
