@@ -47,14 +47,14 @@ class TwitterCog(commands.Cog):
             return announce_channel
 
         async def check_tweet_already_send(optimal_channel, tweet_data):
+            url_list = re.findall(pattern, tweet_data.full_text)
+            full_text = tweet_data.full_text.replace(url_list[-1], '')
             async for message in optimal_channel.history(limit=5):
                 try:
-                    if message.embeds[0].description in tweet_data.full_text:
-                        print("送信しない")
+                    if message.embeds[0].description in full_text:
                         return False
                 except AttributeError:
                     continue
-            print("送信する")
             return True
 
         async def send_tweet_embed(optimal_channel, tweet_data):
