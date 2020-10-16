@@ -65,7 +65,10 @@ class TwitterCog(commands.Cog):
         async def send_tweet_embed(optimal_channel, tweet_data):
             url_list = re.findall(pattern, tweet_data.full_text)
             e = discord.Embed()
-            e.description = tweet_data.full_text.replace(url_list[-1], '')
+            try:
+                e.description = tweet_data.full_text.replace(url_list[-1], '')
+            except IndexError:
+                e.description = tweet_data.full_text
             e.colour = 0x7fffd4
             e.set_author(
                 name=tweet_data.user.name,
