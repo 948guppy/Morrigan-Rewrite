@@ -1,8 +1,9 @@
-import tweepy
 import re
-import discord
-from discord.ext import commands, tasks
 import sys
+
+import discord
+import tweepy
+from discord.ext import commands, tasks
 
 sys.path.append('../')
 from config import Twitter
@@ -47,20 +48,27 @@ class TwitterCog(commands.Cog):
             return announce_channel
 
         async def check_tweet_already_send(optimal_channel, tweet_data):
+            url_list = re.findall(pattern, tweet_data.full_text)
+            full_text = tweet_data.full_text
+            try:
+                full_text = tweet_data.full_text.replace(url_list[-1], '')
+            except IndexError:
+                pass
             async for message in optimal_channel.history(limit=5):
                 try:
-                    if message.embeds[0].description in tweet_data.full_text:
-                        print("送信しない")
+                    if message.embeds[0].description in full_text:
                         return False
                 except AttributeError:
                     continue
-            print("送信する")
             return True
 
         async def send_tweet_embed(optimal_channel, tweet_data):
             url_list = re.findall(pattern, tweet_data.full_text)
             e = discord.Embed()
-            e.description = tweet_data.full_text.replace(url_list[-1], '')
+            try:
+                e.description = tweet_data.full_text.replace(url_list[-1], '')
+            except IndexError:
+                e.description = tweet_data.full_text
             e.colour = 0x7fffd4
             e.set_author(
                 name=tweet_data.user.name,
@@ -73,9 +81,8 @@ class TwitterCog(commands.Cog):
                 pass
             await optimal_channel.send(embed=e)
 
-        tweet = api.home_timeline(tweet_mode='extended')[0]
-
-        if tweet.user.screen_name == "DeadbyBHVR_JP":
+        for tweet in api.user_timeline(id='DeadbyBHVR_JP', tweet_mode='extended')[0:5]:
+            print(tweet.full_text)
             channel = self.bot.get_channel(search_optimal_channel(tweet))
             if await check_tweet_already_send(channel, tweet):
                 await send_tweet_embed(channel, tweet)

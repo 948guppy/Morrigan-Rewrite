@@ -1,6 +1,11 @@
 import textwrap
+import asyncio
 import discord
 from discord.ext import commands
+
+
+class StreamStatusIsNone(Exception):
+    pass
 
 
 class Stream(commands.Cog):
@@ -118,21 +123,58 @@ class Stream(commands.Cog):
             if not before.channel.id == 733626787992567868 and before.channel.category_id == 733625569178157076:
                 await close_stream(member, before)
 
-    @commands.command()
-    async def change_stream_name(self, ctx, name: str):
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
 
-        async def change_streaming_channel(listener, stream_name):
-            state = listener.author.voice
+        information_channel_id = 758219068007776256
+        information_channel = self.bot.get_channel(information_channel_id)
+        channel = self.bot.get_channel(payload.channel_id)
+        guild = self.bot.get_guild(payload.guild_id)
+        message = await channel.fetch_message(payload.message_id)
+        member = guild.get_member(payload.user_id)
+        delete = []
+
+        def check(m):
+            return m.author == member
+
+        async def change_streaming_channel_name(listener, stream_name):
+            state = listener.voice
 
             if state is None:
-                await listener.channel.send("VCにいません")
+                delete.append(await channel.send("VCにいません"))
             else:
                 if state.channel.category_id == 733625569178157076 and not state.channel.id == 733626787992567868:
-                    stream_channel_id = state.channel.id
-                    stream_channel = listener.guild.get_channel(stream_channel_id)
-                    await stream_channel.edit(name=stream_name)
+                    if state.channel.overwrites_for(listener).deafen_members:
+                        stream_channel_id = state.channel.id
+                        stream_channel = listener.guild.get_channel(stream_channel_id)
+                        await stream_channel.edit(name=stream_name)
+                        return True
+                    return False
+            raise StreamStatusIsNone
 
-        await change_streaming_channel(ctx, name)
+        if member.bot:
+            return
+        else:
+            if message.embeds[0].title == "配信編集パネル":
+                if str(payload.emoji) == "1⃣":
+                    try:
+                        delete.append(await channel.send("配信の名前を入力してください"))
+                        msg = await self.bot.wait_for('message', timeout=60.0, check=check)
+                        delete.append(msg)
+                    except asyncio.TimeoutError:
+                        delete.append(await channel.send('タイムアウトしました'))
+                    else:
+                        try:
+                            if await change_streaming_channel_name(member, msg.content):
+                                delete.append(await channel.send(f"配信の名前を{msg.content}に変更しました"))
+                            else:
+                                delete.append(await channel.send("あなたの配信ではありません"))
+                        except StreamStatusIsNone:
+                            pass
+        await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
+            payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
+        await asyncio.sleep(5)
+        await channel.delete_messages(delete)
 
 
 def setup(bot):
