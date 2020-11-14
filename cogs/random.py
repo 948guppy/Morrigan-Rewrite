@@ -65,7 +65,7 @@ class RandomPerk(commands.Cog):
                 e.set_thumbnail(url=guild.icon_url)
             delete.append(await channel.send(embed=e))
             
-        if user.bot:
+        if member.bot:
             return
         if message.embeds[0].title == "ランダムDBD":
             if str(payload.emoji) == "1⃣":
