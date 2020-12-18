@@ -34,7 +34,6 @@ class Custom(commands.Cog):
             e.description = textwrap.dedent(
                 f"""
                 募集者 : {member.mention}さん
-                現在の参加人数 : 1人
                 """
             )
             e.set_footer(text=f'チャンネルID:{created_channel.id}')
