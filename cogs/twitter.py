@@ -69,7 +69,8 @@ class TwitterCog(commands.Cog):
             e = discord.Embed()
             e.description = tweet_data.full_text
             try:
-                e.description = tweet_data.full_text.replace(url_list[-1], '')
+                if not tweet_data.full_text.replace(url_list[-1], '') == "":
+                    e.description = tweet_data.full_text.replace(url_list[-1], '')
             except IndexError:
                 pass
             e.colour = 0x7fffd4

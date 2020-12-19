@@ -67,20 +67,23 @@ class RandomPerk(commands.Cog):
             
         if member.bot:
             return
-        if message.embeds[0].title == "ランダムDBD":
-            if str(payload.emoji) == "1⃣":
-                perks = random.sample(list(Survivor.survivor_perks), 4)
-                await send_survivor_embed(perks)
-            if str(payload.emoji) == "2⃣":
-                perks = random.sample(list(Killer.killer_perks), 4)
-                await send_killer_embed(perks)
-            if str(payload.emoji) == "3⃣":
-                killer = random.sample(list(Killers.Killers), 1)
-                await send_killers_embed(killer)
-            await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
-                payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
-            await asyncio.sleep(60)
-            await channel.delete_messages(delete)
+        try:
+            if message.embeds[0].title == "ランダムDBD":
+                if str(payload.emoji) == "1⃣":
+                    perks = random.sample(list(Survivor.survivor_perks), 4)
+                    await send_survivor_embed(perks)
+                if str(payload.emoji) == "2⃣":
+                    perks = random.sample(list(Killer.killer_perks), 4)
+                    await send_killer_embed(perks)
+                if str(payload.emoji) == "3⃣":
+                    killer = random.sample(list(Killers.Killers), 1)
+                    await send_killers_embed(killer)
+                await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
+                    payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
+                await asyncio.sleep(60)
+                await channel.delete_messages(delete)
+        except IndexError:
+            pass
 
 
 def setup(bot):

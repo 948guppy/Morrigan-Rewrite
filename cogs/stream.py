@@ -155,22 +155,25 @@ class Stream(commands.Cog):
         if member.bot:
             return
         else:
-            if message.embeds[0].title == "配信編集パネル":
-                if str(payload.emoji) == "1⃣":
-                    try:
-                        delete.append(await channel.send("配信の名前を入力してください"))
-                        msg = await self.bot.wait_for('message', timeout=60.0, check=check)
-                        delete.append(msg)
-                    except asyncio.TimeoutError:
-                        delete.append(await channel.send('タイムアウトしました'))
-                    else:
+            try:
+                if message.embeds[0].title == "配信編集パネル":
+                    if str(payload.emoji) == "1⃣":
                         try:
-                            if await change_streaming_channel_name(member, msg.content):
-                                delete.append(await channel.send(f"配信の名前を{msg.content}に変更しました"))
-                            else:
-                                delete.append(await channel.send("あなたの配信ではありません"))
-                        except StreamStatusIsNone:
-                            pass
+                            delete.append(await channel.send("配信の名前を入力してください"))
+                            msg = await self.bot.wait_for('message', timeout=60.0, check=check)
+                            delete.append(msg)
+                        except asyncio.TimeoutError:
+                            delete.append(await channel.send('タイムアウトしました'))
+                        else:
+                            try:
+                                if await change_streaming_channel_name(member, msg.content):
+                                    delete.append(await channel.send(f"配信の名前を{msg.content}に変更しました"))
+                                else:
+                                    delete.append(await channel.send("あなたの配信ではありません"))
+                            except StreamStatusIsNone:
+                                pass
+            except IndexError:
+                pass
         await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
             payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
         await asyncio.sleep(5)
