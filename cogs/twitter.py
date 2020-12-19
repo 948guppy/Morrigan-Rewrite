@@ -51,7 +51,8 @@ class TwitterCog(commands.Cog):
             url_list = re.findall(pattern, tweet_data.full_text)
             full_text = tweet_data.full_text
             try:
-                full_text = tweet_data.full_text.replace(url_list[-1], '')
+                if not tweet_data.full_text.replace(url_list[-1], '') == "":
+                    full_text = tweet_data.full_text.replace(url_list[-1], '')
             except IndexError:
                 pass
             async for message in optimal_channel.history(limit=500):
