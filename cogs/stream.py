@@ -170,12 +170,12 @@ class Stream(commands.Cog):
                                     delete.append(await channel.send(f"配信の名前を{msg.content}に変更しました"))
                                 else:
                                     delete.append(await channel.send("あなたの配信ではありません"))
+                                await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
+                                    payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
                             except StreamStatusIsNone:
                                 pass
             except IndexError:
                 pass
-        await (await self.bot.get_channel(payload.channel_id).fetch_message(payload.message_id)).remove_reaction(
-            payload.emoji, self.bot.get_guild(payload.guild_id).get_member(payload.user_id))
         await asyncio.sleep(5)
         await channel.delete_messages(delete)
 
