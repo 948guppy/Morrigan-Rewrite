@@ -1,4 +1,5 @@
 discord.py >= 1.5.0
+Pillow
 tweepy
 parsedatetime
 python-dateutil

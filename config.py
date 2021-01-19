@@ -7,6 +7,7 @@ class DiscordBot:
         "cogs.admin",
         "cogs.custom",
         "cogs.meta",
+        "cogs.notification",
         "cogs.random",
         "cogs.stream",
         "cogs.thread",
