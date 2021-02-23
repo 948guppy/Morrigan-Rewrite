@@ -9,6 +9,7 @@ class DiscordBot:
         "cogs.meta",
         "cogs.notification",
         "cogs.random",
+        "cogs.read",
         "cogs.stream",
         "cogs.thread",
         "cogs.twitter"
