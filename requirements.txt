@@ -6,3 +6,4 @@ python-dateutil
 dispander
 youtube_dl
 pynacl
+ffmpeg
